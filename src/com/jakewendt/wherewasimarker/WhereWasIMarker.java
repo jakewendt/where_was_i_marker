@@ -1,49 +1,49 @@
 
 package com.jakewendt.wherewasimarker;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-//import android.view.View.OnClickListener;
-import android.widget.TextView;
-//import android.widget.Button;
-import android.content.SharedPreferences;
-import android.content.Context;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.telephony.TelephonyManager;
+import com.jakewendt.wherewasimarker.R;
 
 import java.util.ArrayList;
-
-// import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.NameValuePair;
-import org.apache.http.HttpResponse;
-// import org.apache.http.HttpEntity;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
 import java.util.List;
-// import java.io.IOException;
-// import java.io.OutputStream;
-// import java.io.ByteArrayOutputStream;
-// import java.io.UnsupportedEncodingException;
-
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.io.Reader;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.TextView;
+import android.widget.Button;
+import android.content.SharedPreferences;
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.telephony.TelephonyManager;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.NameValuePair;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.HttpClient;
 
 public class WhereWasIMarker extends Activity {
 
-private LocationManager locationManager;
+	private LocationManager locationManager;
 
 	/* I need to learn the differences between public, private, final, static, etc. */
 	public static final String PREFS_NAME = "MyPrefsFile";
