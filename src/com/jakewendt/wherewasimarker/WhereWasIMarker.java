@@ -57,7 +57,7 @@ private LocationManager locationManager;
 	public TextView latitudeField;
 	public TextView longitudeField;
 	public Location last_location;
-	
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -77,7 +77,7 @@ private LocationManager locationManager;
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		name  = settings.getString("name", "Jake's Where was I Marker");
 		email = settings.getString("email", "jake@example.com");
-        
+
 		((TextView) findViewById(R.id.name)).setText(name);
 		((TextView) findViewById(R.id.email)).setText(email);
 		TelephonyManager tManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -88,28 +88,29 @@ private LocationManager locationManager;
 		((TextView) findViewById(R.id.device_id)).setText(device_id);
 		((TextView) findViewById(R.id.phone_number)).setText(phone_number);
 	}
-    
+
 	// this inner class is the intent reciever that recives notifcations
 	// from the location provider about position updates, and then redraws
 	// the MapView with the new location centered.
 	public class LocationUpdateHandler implements LocationListener {
-		@Override
+//	
+//		@Override
 		public void onLocationChanged(Location location) {
 			refresh_location(location);
 		}
 
-		@Override
+//		@Override
 		public void onProviderDisabled(String provider) {}
 
-		@Override
+//		@Override
 		public void onProviderEnabled(String provider) {}
 
-		@Override
+//		@Override
 		public void onStatusChanged(String provider, int status,
 			Bundle extras) {}
 	}
 
-    
+
 	public void showLocation(View view) {
 		switch (view.getId()) {
 			case R.id.showlocation:
@@ -136,7 +137,7 @@ private LocationManager locationManager;
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putString("name", name);
 		editor.putString("email", email);
-      
+
 		// Commit the edits!
 		editor.commit();
 	}
@@ -147,7 +148,7 @@ private LocationManager locationManager;
 		latitudeField.setText(Double.toString( location.getLatitude()));
 		longitudeField.setText(Double.toString(location.getLongitude()));
 	}
-    
+
 	public void markLocation(View view) {
 		switch (view.getId()) {
 			case R.id.marklocation:
@@ -166,12 +167,12 @@ private LocationManager locationManager;
 						formparams.add(new BasicNameValuePair("marker[email]", email));
 						formparams.add(new BasicNameValuePair("marker[phone_number]", phone_number));
 						formparams.add(new BasicNameValuePair("marker[device_id]", device_id));
-	
+
 						UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");
 						HttpPost httppost = new HttpPost("http://wherewasi.jakewendt.com/markers");
 						httppost.setEntity(entity);
 						HttpResponse response = httpclient.execute(httppost);
-	
+
 						InputStream is = response.getEntity().getContent();
 						Writer writer = new StringWriter();
 						char[] buffer = new char[1024];
@@ -185,7 +186,7 @@ private LocationManager locationManager;
 						} finally {
 							is.close();
 						}
-		                
+
 						((TextView) findViewById(R.id.status)).setText(
 							writer.toString());
 					} catch (Exception e) {
