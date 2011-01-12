@@ -2,4 +2,12 @@
 <resources>
     <string name="hello">Hello World, WhereWasIMarker!</string>
     <string name="app_name">WhereWasIMarker</string>
+    
+    <string name="back">Back</string>
+    <string name="clear">Clear</string>
+
+    <string name="decrease">Decrease</string>
+    <string name="increase">Increase</string>
+    <string name="mark">Mark</string>
+    
 </resources>
