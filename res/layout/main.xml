@@ -1,64 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:stretchColumns="*"
-    >
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:stretchColumns="*"
+	>
 
-    <TableRow>
-        <TextView
-          android:text="Name"
-            android:padding="3dip" />
-        <TextView
-            android:id="@+id/name"
-            android:padding="3dip" />
-    </TableRow>
+	<TableRow>
+		<TextView
+			android:text="Name"
+			android:padding="3dip" />
+		<TextView
+			android:id="@+id/name"
+			android:padding="3dip" />
+	</TableRow>
 
-    <TableRow>
-        <TextView
-            android:text="EMail"
-            android:padding="3dip" />
-        <TextView
-            android:id="@+id/email"
-            android:padding="3dip" />
-    </TableRow>
+	<TableRow>
+		<TextView
+			android:text="EMail"
+			android:padding="3dip" />
+		<TextView
+			android:id="@+id/email"
+			android:padding="3dip" />
+	</TableRow>
     
-    <TableRow>
-        <TextView
-          android:text="Phone Number"
-            android:padding="3dip" />
-        <TextView
-            android:id="@+id/phone_number"
-            android:padding="3dip" />
-    </TableRow>
+	<TableRow>
+		<TextView
+			android:text="Phone Number"
+			android:padding="3dip" />
+		<TextView
+			android:id="@+id/phone_number"
+			android:padding="3dip" />
+	</TableRow>
 
-    <TableRow>
-        <TextView
-            android:text="DeviceID"
-            android:padding="3dip" />
-        <TextView
-            android:id="@+id/device_id"
-            android:padding="3dip" />
-    </TableRow>
+	<TableRow>
+		<TextView
+			android:text="DeviceID"
+			android:padding="3dip" />
+		<TextView
+			android:id="@+id/device_id"
+			android:padding="3dip" />
+	</TableRow>
 
-    <TableRow>
-        <TextView
-            android:text="Longitude"
-            android:padding="3dip" />
-        <TextView
-            android:id="@+id/longitude"
-            android:padding="3dip" />
-    </TableRow>
-    <TableRow>
-        <TextView
-            android:text="Latitude"
-            android:padding="3dip" />
-        <TextView
-            android:id="@+id/latitude"
-            android:padding="3dip" />
-    </TableRow>
+	<TableRow>
+		<TextView
+			android:text="Longitude"
+			android:padding="3dip" />
+		<TextView
+			android:id="@+id/longitude"
+			android:padding="3dip" />
+	</TableRow>
+	<TableRow>
+		<TextView
+			android:text="Latitude"
+			android:padding="3dip" />
+		<TextView
+			android:id="@+id/latitude"
+			android:padding="3dip" />
+	</TableRow>
 
-    <TableRow>
+	<TableRow>
 		<Button
 			android:layout_span="2"
 			android:text="Show Location" 
@@ -66,9 +66,9 @@
 			android:onClick="showLocation"
 			android:layout_width="match_parent" 
 			android:layout_height="match_parent"></Button>
-    </TableRow>
+	</TableRow>
 
-    <TableRow>
+	<TableRow>
 		<Button
 			android:layout_span="2"
 			android:text="Mark Location" 
@@ -76,11 +76,11 @@
 			android:onClick="markLocation"
 			android:layout_width="match_parent" 
 			android:layout_height="match_parent"></Button>
-    </TableRow>    
+	</TableRow>    
 	<TableRow>
-        <TextView
+		<TextView
 			android:layout_span="2"
-            android:id="@+id/status"
-            android:padding="3dip" />
-    </TableRow>
+			android:id="@+id/status"
+			android:padding="3dip" />
+	</TableRow>
 </TableLayout>
