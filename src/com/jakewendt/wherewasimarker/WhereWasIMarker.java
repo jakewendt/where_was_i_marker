@@ -1,63 +1,105 @@
-
 package com.jakewendt.wherewasimarker;
 
 import com.jakewendt.wherewasimarker.R;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.UnsupportedEncodingException;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.io.Reader;
+
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
+// import java.util.Random;
+// import java.io.IOException;
+// import java.io.OutputStream;
+// import java.io.ByteArrayOutputStream;
+// import java.io.UnsupportedEncodingException;
+// import java.io.InputStream;
+// import java.io.StringWriter;
+// import java.io.Writer;
+// import java.io.Reader;
+// import java.io.BufferedReader;
+// import java.io.InputStreamReader;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
+// import android.view.View.OnClickListener;
 import android.widget.TextView;
-import android.widget.Button;
+// import android.widget.Button;
 import android.content.SharedPreferences;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.speech.tts.TextToSpeech;
 import android.telephony.TelephonyManager;
-import org.apache.http.client.ClientProtocolException;
+// import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.NameValuePair;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
+// import org.apache.http.HttpEntity;
+// import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.HttpClient;
+// import org.apache.http.client.HttpClient;
 
-public class WhereWasIMarker extends Activity {
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
+
+import java.util.HashMap;
+
+public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitListener {
 
 	private LocationManager locationManager;
-
+	private TextToSpeech tts;
+	static final int TTS_CHECK_CODE = 0;
+ 
 	/* I need to learn the differences between public, private, final, static, etc. */
 	public static final String PREFS_NAME = "MyPrefsFile";
 	public String name;
 	public String email;
 	public String phone_number;
 	public String device_id;
+	public LinkedString status;
 	public boolean mSilentMode = false;
 	static final private int BACK_ID = Menu.FIRST;
 	static final private int CLEAR_ID = Menu.FIRST + 1;
-	public TextView latitudeField;
-	public TextView longitudeField;
-	public Location last_location;
+	private TextView latitudeField;
+	private TextView longitudeField;
+	private TextView statusField;
+	private Location last_location;
+/*
+///	private HashMap phrases;
+    HashMap hm = new HashMap();
+    hm.put("Rohit", new Double(3434.34));
+    hm.put("Mohit", new Double(123.22));
+    hm.put("Ashish", new Double(1200.34));
+    hm.put("Khariwal", new Double(99.34));
+    hm.put("Pankaj", new Double(-19.34));
+    
+     hm.get("Rohit")
+ */
 
+	@Override
+	public void onInit(int initStatus) {
+		if (initStatus == TextToSpeech.SUCCESS)
+		{
+			tts.speak( "Program initiated",TextToSpeech.QUEUE_FLUSH, null);
+		}
+	}
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -67,6 +109,12 @@ public class WhereWasIMarker extends Activity {
 		latitudeField  = (TextView) findViewById(R.id.latitude);
 		longitudeField = (TextView) findViewById(R.id.longitude);
 
+		// Initialize text-to-speech. This is an asynchronous operation.
+        // The OnInitListener (second argument) is called after initialization completes.
+        tts = new TextToSpeech( this, this );
+		statusField = (TextView) findViewById(R.id.status);
+        status = new LinkedString(tts,statusField);
+        
 		// get a handle on the location manager
 		locationManager =(LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		// public void requestLocationUpdates (String provider, long minTime, float minDistance, PendingIntent intent)
@@ -120,15 +168,18 @@ public class WhereWasIMarker extends Activity {
 				if (location != null) {
 					refresh_location(location);
 				} else {
-					latitudeField.setText("GPS not available");
-					longitudeField.setText("GPS not available");
+					status.message("GPS not available");
+					latitudeField.setText(status.toString());
+					longitudeField.setText(status.toString());				
 				}
 				break;
+				
 		}
 	}
 
 	@Override
 	protected void onStop(){
+		tts.speak("Self destruct sequence initiated",TextToSpeech.QUEUE_FLUSH, null);
 		super.onStop();
 
 		// We need an Editor object to make preference changes.
@@ -150,15 +201,16 @@ public class WhereWasIMarker extends Activity {
 	}
 
 	public void markLocation(View view) {
+
 		switch (view.getId()) {
 			case R.id.marklocation:
 				if (last_location != null) {
-
-					((TextView) findViewById(R.id.status)).setText(
-						"Marking location");
+/* The next parts happen so fast that this message is rarely seen. */
+					status.message("Marking location");
 					try {
 						HttpClient httpclient = new DefaultHttpClient();
 						List<NameValuePair> formparams = new ArrayList<NameValuePair>();
+//						status.message("Building parameters");
 						formparams.add(new BasicNameValuePair("marker[latitude]", 
 							Double.toString(last_location.getLatitude())));
 						formparams.add(new BasicNameValuePair("marker[longitude]", 
@@ -171,29 +223,30 @@ public class WhereWasIMarker extends Activity {
 						UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");
 						HttpPost httppost = new HttpPost("http://wherewasi.jakewendt.com/markers");
 						httppost.setEntity(entity);
+//						status.message("Executing request");
 						HttpResponse response = httpclient.execute(httppost);
+//						status.message("Processing response");
 
-						InputStream is = response.getEntity().getContent();
+						InputStream is = (InputStream) response.getEntity().getContent();
 						Writer writer = new StringWriter();
 						char[] buffer = new char[1024];
-						try {
-							Reader reader = new BufferedReader(
-								new InputStreamReader(is, "UTF-8"));
-							int n;
-							while ((n = reader.read(buffer)) != -1) {
-								writer.write(buffer, 0, n);
-							}
-						} finally {
-							is.close();
+						Reader reader = new BufferedReader(
+							new InputStreamReader(is, "UTF-8"));
+						int n;
+						while ((n = reader.read(buffer)) != -1) {
+							writer.write(buffer, 0, n);
 						}
-
-						((TextView) findViewById(R.id.status)).setText(
-							writer.toString());
+						is.close();
+						status.message(writer.toString());
 					} catch (Exception e) {
+						status.message("There was an exception");
+						  StringWriter sw = new StringWriter();
+						  e.printStackTrace(new PrintWriter(sw));
+						statusField.setText(sw.toString());
 						e.printStackTrace();
 					}
 				} else {
-					((TextView) findViewById(R.id.status)).setText("GPS not available");
+					status.message("GPS not available");
 				}
 				break;
 		}
