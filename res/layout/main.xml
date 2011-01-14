@@ -58,7 +58,24 @@
 			android:id="@+id/latitude"
 			android:padding="3dip" />
 	</TableRow>
-	
+	<TableRow android:layout_weight="1.0">
+		<TextView
+			android:text="COG"
+			android:padding="3dip" />
+		<TextView
+			android:id="@+id/cog"
+			android:padding="3dip" />
+	</TableRow>
+
+	<TableRow android:layout_weight="1.0">
+		<TextView
+			android:text="Distance"
+			android:padding="3dip" />
+		<TextView
+			android:id="@+id/distance"
+			android:padding="3dip" />
+	</TableRow>
+			
 	<TableRow android:layout_weight="2.0">
 		<Button
 			android:layout_span="2"

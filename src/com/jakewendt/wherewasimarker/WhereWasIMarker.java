@@ -79,7 +79,12 @@ public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitList
 	private TextView latitudeField;
 	private TextView longitudeField;
 	private TextView statusField;
+	private TextView cogField;
+	private TextView distanceField;
 	private Location last_location;
+	private Location bearing_location;
+	private float last_bearing;
+	private float distance;
 /*
 ///	private HashMap phrases;
     HashMap hm = new HashMap();
@@ -108,6 +113,8 @@ public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitList
 
 		latitudeField  = (TextView) findViewById(R.id.latitude);
 		longitudeField = (TextView) findViewById(R.id.longitude);
+		cogField       = (TextView) findViewById(R.id.cog);
+		distanceField  = (TextView) findViewById(R.id.distance);
 
 		// Initialize text-to-speech. This is an asynchronous operation.
         // The OnInitListener (second argument) is called after initialization completes.
@@ -116,10 +123,10 @@ public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitList
         status = new LinkedString(tts,statusField);
         
 		// get a handle on the location manager
-		locationManager =(LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//		locationManager =(LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		// public void requestLocationUpdates (String provider, long minTime, float minDistance, PendingIntent intent)
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
-			0, new LocationUpdateHandler());
+//		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000,
+//			1, new LocationUpdateHandler());
 
 		// Restore preferences
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
@@ -171,6 +178,7 @@ public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitList
 					status.message("GPS not available");
 					latitudeField.setText(status.toString());
 					longitudeField.setText(status.toString());				
+					cogField.setText(status.toString());				
 				}
 				break;
 				
@@ -179,7 +187,8 @@ public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitList
 
 	@Override
 	protected void onStop(){
-		tts.speak("Self destruct sequence initiated",TextToSpeech.QUEUE_FLUSH, null);
+		
+
 		super.onStop();
 
 		// We need an Editor object to make preference changes.
@@ -198,6 +207,37 @@ public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitList
 		last_location = location;
 		latitudeField.setText(Double.toString( location.getLatitude()));
 		longitudeField.setText(Double.toString(location.getLongitude()));
+		
+
+//		some_previous_location.bearingTo (current_location)
+
+//		perhaps save a bearing location every minute to compare to
+/*
+ * float 	distanceTo(Location dest)
+ * Returns the approximate distance in meters between this location and the given location.
+ * 
+ * bull pucky.  
+ * 
+ * float 	bearingTo(Location dest)
+ * Returns the approximate initial bearing in degrees East of true North when traveling 
+ * 	along the shortest path between this location and the given location.
+ */
+		
+		if( bearing_location == null ){
+			bearing_location = last_location;
+		}
+		// Returns the approximate distance in meters between this location and the given location.
+		distance = bearing_location.distanceTo(last_location);
+		distanceField.setText(Float.toString(distance));
+		if( distance > 0.0001 ) {
+			last_bearing = bearing_location.bearingTo(last_location);
+			cogField.setText(Float.toString(last_bearing));
+		} else {
+//			last_bearing = bearing_location.bearingTo(last_location);
+			cogField.setText("---");
+		}
+		bearing_location = last_location;	
+		tts.speak("Set location",TextToSpeech.QUEUE_FLUSH, null);
 	}
 
 	public void markLocation(View view) {
