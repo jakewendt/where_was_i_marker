@@ -2,8 +2,7 @@ package com.jakewendt.wherewasimarker;
 
 import com.jakewendt.wherewasimarker.R;
 
-
-import android.util.Log;
+//import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -13,25 +12,12 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
-// import java.util.Random;
-// import java.io.IOException;
-// import java.io.OutputStream;
-// import java.io.ByteArrayOutputStream;
-// import java.io.UnsupportedEncodingException;
-// import java.io.InputStream;
-// import java.io.StringWriter;
-// import java.io.Writer;
-// import java.io.Reader;
-// import java.io.BufferedReader;
-// import java.io.InputStreamReader;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-// import android.view.View.OnClickListener;
 import android.widget.TextView;
-// import android.widget.Button;
 import android.content.SharedPreferences;
 import android.content.Context;
 import android.location.Location;
@@ -39,30 +25,18 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.speech.tts.TextToSpeech;
 import android.telephony.TelephonyManager;
-// import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.NameValuePair;
 import org.apache.http.HttpResponse;
-// import org.apache.http.HttpEntity;
-// import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-// import org.apache.http.client.HttpClient;
-
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
-
-import java.util.HashMap;
 
 public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitListener {
 
-	private LocationManager locationManager;
+	private LocationManager locationManager; // = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 	private TextToSpeech tts;
 	static final int TTS_CHECK_CODE = 0;
  
@@ -74,7 +48,7 @@ public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitList
 	public String device_id;
 	public LinkedString status;
 	public boolean mSilentMode = false;
-	static final private int BACK_ID = Menu.FIRST;
+	static final private int BACK_ID  = Menu.FIRST;
 	static final private int CLEAR_ID = Menu.FIRST + 1;
 	private TextView latitudeField;
 	private TextView longitudeField;
@@ -97,18 +71,61 @@ public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitList
      hm.get("Rohit")
  */
 
+	/**
+	 * void com.jakewendt.wherewasimarker.WhereWasIMarker.onInit(int initStatus)
+	 * 
+	 * @Override
+	 * 
+	 * Specified by: onInit(...) in OnInitListener
+	 * public abstract void onInit (int status)
+	 * Since: API Level 4
+	 * Called to signal the completion of the TextToSpeech engine initialization.
+	 * 
+	 * Parameters
+	 * status	SUCCESS or ERROR.
+	 */
 	@Override
 	public void onInit(int initStatus) {
 		if (initStatus == TextToSpeech.SUCCESS)
 		{
-			tts.speak( "Program initiated",TextToSpeech.QUEUE_FLUSH, null);
+			tts.speak( "Program in-ish-e-ated",TextToSpeech.QUEUE_FLUSH, null);
 		}
 	}
 	
-	/** Called when the activity is first created. */
+	/**
+	 * void com.jakewendt.wherewasimarker.WhereWasIMarker.onCreate(Bundle savedInstanceState)
+	 * 
+	 * @Override
+	 * Called when the activity is first created.
+	 * 
+	 * Overrides: onCreate(...) in Activity
+	 * 
+	 * Parameters:
+	 * 	savedInstanceState
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+/* 
+ * void android.app.Activity.onCreate(Bundle savedInstanceState)
+ * 
+ * protected void onCreate (Bundle savedInstanceState)
+ * Since: API Level 1
+ * Called when the activity is starting. This is where most initialization should go: calling setContentView(int) to 
+ * inflate the activity's UI, using findViewById(int) to programmatically interact with widgets in the UI, calling 
+ * managedQuery(android.net.Uri, String[], String, String[], String) to retrieve cursors for data being displayed, etc.
+ * You can call finish() from within this function, in which case onDestroy() will be immediately called without any 
+ * of the rest of the activity lifecycle (onStart(), onResume(), onPause(), etc) executing.
+ * Derived classes must call through to the super class's implementation of this method. If they do not, 
+ * an exception will be thrown.
+ * 
+ * Parameters
+ * 	savedInstanceState	If the activity is being re-initialized after previously being shut down then this Bundle contains the data it most recently supplied in onSaveInstanceState(Bundle). Note: Otherwise it is null.
+ * See Also
+ * 	onStart()
+ * 	onSaveInstanceState(Bundle)
+ * 	onRestoreInstanceState(Bundle)
+ * 	onPostCreate(Bundle)
+ */		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
 		latitudeField  = (TextView) findViewById(R.id.latitude);
@@ -123,13 +140,23 @@ public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitList
         status = new LinkedString(tts,statusField);
         
 		// get a handle on the location manager
-//		locationManager =(LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		// public void requestLocationUpdates (String provider, long minTime, float minDistance, PendingIntent intent)
 //		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000,
 //			1, new LocationUpdateHandler());
-
-		// Restore preferences
-		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+/*
+ * Restore preferences
+ * SharedPreferences android.content.ContextWrapper.getSharedPreferences(String name, int mode)
+ * 
+ * Parameters
+ * name	Desired preferences file. If a preferences file by this name does not exist, it will be created 
+ * 		you retrieve an editor (SharedPreferences.edit()) and then commit changes (Editor.commit()).
+ * mode	Operating mode. Use 0 or MODE_PRIVATE for the default operation, MODE_WORLD_READABLE and 
+ * 		MODE_WORLD_WRITEABLE to control permissions.
+ * 
+ * Returns
+ * Returns the single SharedPreferences instance that can be used to retrieve and modify the preference values.
+ */		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		name  = settings.getString("name", "Jake's Where was I Marker");
 		email = settings.getString("email", "jake@example.com");
 
@@ -144,9 +171,15 @@ public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitList
 		((TextView) findViewById(R.id.phone_number)).setText(phone_number);
 	}
 
-	// this inner class is the intent reciever that recives notifcations
-	// from the location provider about position updates, and then redraws
-	// the MapView with the new location centered.
+	/**
+	 * this inner class is the intent reciever that recives notifcations
+	 * from the location provider about position updates, and then redraws
+	 * the MapView with the new location centered.
+	 * 
+	 * Used for receiving notifications from the LocationManager when the location has changed. 
+	 * These methods are called if the LocationListener has been registered with the location 
+	 * manager service using the requestLocationUpdates(String, long, float, LocationListener) method.
+	 */
 	public class LocationUpdateHandler implements LocationListener {
 //	
 //		@Override
@@ -165,12 +198,27 @@ public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitList
 			Bundle extras) {}
 	}
 
-
 	public void showLocation(View view) {
 		switch (view.getId()) {
 			case R.id.showlocation:
-				LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-				Location location = locationManager
+//				LocationManager 
+//				locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+				
+/*
+ * Location android.location.LocationManager.getLastKnownLocation(String provider)
+ * 
+ * Returns a Location indicating the data from the last known location fix obtained from the given provider. 
+ * This can be done without starting the provider. Note that this location could be out-of-date, 
+ * for example if the device was turned off and moved to another location.
+ * 
+ * If the provider is currently disabled, null is returned.
+ * 
+ * Parameters
+ * provider	the name of the provider
+ * 
+ * Returns
+ * the last known location for the provider, or null				
+ */				Location location = locationManager
 					.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 				if (location != null) {
 					refresh_location(location);
@@ -185,10 +233,29 @@ public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitList
 		}
 	}
 
+	/**
+	 * void com.jakewendt.wherewasimarker.WhereWasIMarker.onStop()
+	 * 
+	 * @Override
+	 * Overrides: onStop() in Activity
+	 * protected void onStop ()
+	 * Since: API Level 1
+	 * Called when you are no longer visible to the user. You will next receive either onRestart(), onDestroy(), 
+	 * or nothing, depending on later user activity.
+	 * Note that this method may never be called, in low memory situations where the system does not have 
+	 * enough memory to keep your activity's process running after its onPause() method is called.
+	 * Derived classes must call through to the super class's implementation of this method. If they do not, 
+	 * an exception will be thrown.
+	 * 
+	 * See Also
+	 * 	onRestart()
+	 * 	onResume()
+	 * 	onSaveInstanceState(Bundle)
+	 * 	onDestroy()
+	 */
 	@Override
 	protected void onStop(){
-		
-
+		tts.speak("Self destruct sequence in-ish-e-ated",TextToSpeech.QUEUE_FLUSH, null);
 		super.onStop();
 
 		// We need an Editor object to make preference changes.
@@ -201,7 +268,6 @@ public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitList
 		// Commit the edits!
 		editor.commit();
 	}
-
 
 	public void refresh_location(Location location){
 		last_location = location;
@@ -293,8 +359,8 @@ public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitList
 	}
 
 	/**
-	* Called when the activity is about to start interacting with the user.
-	*/
+	 * Called when the activity is about to start interacting with the user.
+	 */
 	@Override
 	protected void onResume() {
 		super.onResume();
