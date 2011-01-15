@@ -7,4 +7,44 @@
 	<string name="decrease">Decrease</string>
 	<string name="increase">Increase</string>
 	<string name="mark">Mark</string>
+	
+	
+	
+	
+
+   <string name="username_text">Name (optional)</string>
+   <string name="email_text">Email (optional)</string>
+   <string name="units_text">Units</string>
+<!-- 
+  <string name="taunts_text">Taunts</string>
+   <string name="radius_text">Search radius</string>
+   <string name="restart_text">Requires restart</string>
+   <string name="settings_submit">Submit</string>
+   <string name="about_title">Wait</string>
+   <string name="voiceRecognition_title">Voice</string>
+   <string name="about_title2">Wikispeedia.org (profit sharing)</string>
+   <string name="main1_title">Press when passing a Speed Limit sign.</string>
+   <string name="about_label1">25 Mph</string>
+   <string name="about_label2">30 Mph</string>
+   <string name="about_label3">35 Mph</string>
+   <string name="about_label4">40 Mph</string>
+   <string name="about_label5">45 Mph</string>
+   <string name="about_label6">50 Mph</string>
+   <string name="about_label7">55 Mph</string>
+   <string name="about_label8">60 Mph</string>
+   <string name="about_label9">65 Mph</string>
+   <string name="about_label10">70 Mph</string>
+      <string name="btn_speak_label">Speak</string>
+   <string name="settings_label">Settings</string>
+   <string name="v_label">Voice</string>
+   <string name="submitting_text">Submitting sign to Wikispeedia.org, press back arrow...</string>
+   <string name="about_textsettings">Settings...</string>
+   <string name="to_text">To:</string>
+   <string name="back_text">The speed limit is:</string>
+   <string name="empty"></string>
+   <string name="translating">Translating</string>
+   <string name="translation_error">(Translation error)</string>
+   <string name="translation_interrupted">(Translation
+      interrupted)</string>
+-->
 </resources>

@@ -4,7 +4,6 @@
 	android:layout_height="match_parent"
 	android:stretchColumns="*"
 	>
-	
 
 	<TableRow android:layout_weight="1.0">
 		<TextView
@@ -82,7 +81,7 @@
 			android:layout_weight=".4"
 			android:text="Show Location" 
 			android:id="@+id/showlocation" 
-			android:onClick="showLocation"
+			android:onClick="showLocation" 
 			android:layout_width="match_parent" 
 			android:layout_height="match_parent"></Button>
 	</TableRow>
@@ -92,7 +91,7 @@
 			android:layout_weight=".4"
 			android:text="Mark Location" 
 			android:id="@+id/marklocation" 
-			android:onClick="markLocation"
+			android:onClick="markLocation" 
 			android:layout_width="match_parent" 
 			android:layout_height="match_parent"></Button>
 	</TableRow>

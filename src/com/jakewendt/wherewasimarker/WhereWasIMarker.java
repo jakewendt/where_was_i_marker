@@ -2,8 +2,7 @@ package com.jakewendt.wherewasimarker;
 
 import com.jakewendt.wherewasimarker.R;
 
-//import android.util.Log;
-
+import android.util.Log;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -18,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.content.SharedPreferences;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
@@ -33,23 +31,26 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import java.io.InputStream;
+import android.content.Intent;
 
+
+//public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitListener, View.OnClickListener  {
 public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitListener {
 
+	private static final String TAG = "WhereWasI";
 	private LocationManager locationManager; // = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 	private TextToSpeech tts;
 	static final int TTS_CHECK_CODE = 0;
  
 	/* I need to learn the differences between public, private, final, static, etc. */
 	public static final String PREFS_NAME = "MyPrefsFile";
-	public String name;
-	public String email;
 	public String phone_number;
 	public String device_id;
 	public LinkedString status;
 	public boolean mSilentMode = false;
 	static final private int BACK_ID  = Menu.FIRST;
 	static final private int CLEAR_ID = Menu.FIRST + 1;
+	static final private int SETTINGS_ID = Menu.FIRST + 2;
 	private TextView latitudeField;
 	private TextView longitudeField;
 	private TextView statusField;
@@ -134,43 +135,33 @@ public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitList
 		distanceField  = (TextView) findViewById(R.id.distance);
 
 		// Initialize text-to-speech. This is an asynchronous operation.
-        // The OnInitListener (second argument) is called after initialization completes.
-        tts = new TextToSpeech( this, this );
+		// The OnInitListener (second argument) is called after initialization completes.
+		tts = new TextToSpeech( this, this );
 		statusField = (TextView) findViewById(R.id.status);
-        status = new LinkedString(tts,statusField);
-        
+		status = new LinkedString(tts,statusField);
+
 		// get a handle on the location manager
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		// public void requestLocationUpdates (String provider, long minTime, float minDistance, PendingIntent intent)
-//		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000,
-//			1, new LocationUpdateHandler());
-/*
- * Restore preferences
- * SharedPreferences android.content.ContextWrapper.getSharedPreferences(String name, int mode)
- * 
- * Parameters
- * name	Desired preferences file. If a preferences file by this name does not exist, it will be created 
- * 		you retrieve an editor (SharedPreferences.edit()) and then commit changes (Editor.commit()).
- * mode	Operating mode. Use 0 or MODE_PRIVATE for the default operation, MODE_WORLD_READABLE and 
- * 		MODE_WORLD_WRITEABLE to control permissions.
- * 
- * Returns
- * Returns the single SharedPreferences instance that can be used to retrieve and modify the preference values.
- */		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		name  = settings.getString("name", "Jake's Where was I Marker");
-		email = settings.getString("email", "jake@example.com");
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000,
+			1, new LocationUpdateHandler());
 
-		((TextView) findViewById(R.id.name)).setText(name);
-		((TextView) findViewById(R.id.email)).setText(email);
+		update_settings_view(this);
+
 		TelephonyManager tManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
-		device_id = tManager.getDeviceId();
+		device_id    = tManager.getDeviceId();
 		phone_number = tManager.getLine1Number();
 
 		((TextView) findViewById(R.id.device_id)).setText(device_id);
 		((TextView) findViewById(R.id.phone_number)).setText(phone_number);
 	}
 
+	public void update_settings_view(Context context) {
+		Settings.readSettings(context);
+		((TextView) findViewById(R.id.name)).setText(Settings.username);
+		((TextView) findViewById(R.id.email)).setText(Settings.email);
+	}
 	/**
 	 * this inner class is the intent reciever that recives notifcations
 	 * from the location provider about position updates, and then redraws
@@ -257,23 +248,18 @@ public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitList
 	protected void onStop(){
 		tts.speak("Self destruct sequence in-ish-e-ated",TextToSpeech.QUEUE_FLUSH, null);
 		super.onStop();
+	}
 
-		// We need an Editor object to make preference changes.
-		// All objects are from android.content.Context
-		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		SharedPreferences.Editor editor = settings.edit();
-		editor.putString("name", name);
-		editor.putString("email", email);
-
-		// Commit the edits!
-		editor.commit();
+	@Override
+	protected void onResume(){
+		super.onResume();
+		update_settings_view(this);
 	}
 
 	public void refresh_location(Location location){
 		last_location = location;
 		latitudeField.setText(Double.toString( location.getLatitude()));
 		longitudeField.setText(Double.toString(location.getLongitude()));
-		
 
 //		some_previous_location.bearingTo (current_location)
 
@@ -295,7 +281,7 @@ public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitList
 		// Returns the approximate distance in meters between this location and the given location.
 		distance = bearing_location.distanceTo(last_location);
 		distanceField.setText(Float.toString(distance));
-		if( distance > 0.0001 ) {
+		if( distance > 0.01 ) {
 			last_bearing = bearing_location.bearingTo(last_location);
 			cogField.setText(Float.toString(last_bearing));
 		} else {
@@ -316,22 +302,21 @@ public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitList
 					try {
 						HttpClient httpclient = new DefaultHttpClient();
 						List<NameValuePair> formparams = new ArrayList<NameValuePair>();
-//						status.message("Building parameters");
 						formparams.add(new BasicNameValuePair("marker[latitude]", 
 							Double.toString(last_location.getLatitude())));
 						formparams.add(new BasicNameValuePair("marker[longitude]", 
 							Double.toString(last_location.getLongitude())));
-						formparams.add(new BasicNameValuePair("marker[name]", name));
-						formparams.add(new BasicNameValuePair("marker[email]", email));
+						formparams.add(new BasicNameValuePair("marker[direction]", 
+								Double.toString(last_bearing)));
+						formparams.add(new BasicNameValuePair("marker[name]", Settings.username));
+						formparams.add(new BasicNameValuePair("marker[email]", Settings.email));
 						formparams.add(new BasicNameValuePair("marker[phone_number]", phone_number));
 						formparams.add(new BasicNameValuePair("marker[device_id]", device_id));
 
 						UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");
 						HttpPost httppost = new HttpPost("http://wherewasi.jakewendt.com/markers");
 						httppost.setEntity(entity);
-//						status.message("Executing request");
 						HttpResponse response = httpclient.execute(httppost);
-//						status.message("Processing response");
 
 						InputStream is = (InputStream) response.getEntity().getContent();
 						Writer writer = new StringWriter();
@@ -359,16 +344,30 @@ public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitList
 	}
 
 	/**
-	 * Called when the activity is about to start interacting with the user.
+	 * Replace my button click methods with this
 	 */
-	@Override
-	protected void onResume() {
-		super.onResume();
+/*	@Override
+	public void onClick(View view) {
+//		super.onClick();
+		switch (view.getId()) {
+			case R.id.showlocation:
+				showLocation(view);
+				break;
+			case R.id.marklocation:
+				markLocation(view);
+				break;
+//			case R.id.marklocation:
+//				Intent vsettings = new Intent(this,VoiceRecognition.class);
+//				startActivity(vsettings);
+//				break;
+		}
 	}
+*/
 
 
-/*  Hidden menu stuff */
-
+/*
+ * All of that hidden menu stuff
+ */
 
 	/**
 	* Called when your activity's options menu needs to be created.
@@ -382,10 +381,10 @@ public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitList
 		// given them shortcuts.
 		menu.add(0, BACK_ID, 0, R.string.back).setShortcut('0', 'b');
 		menu.add(0, CLEAR_ID, 0, R.string.clear).setShortcut('1', 'c');
+		menu.add(0, SETTINGS_ID, 0, "Settings").setShortcut('2', 's');
 
 		return true;
 	}
-
 	/**
 	* Called right before your activity's option menu is displayed.
 	*/
@@ -399,7 +398,6 @@ public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitList
 
 		return true;
 	}
-
 	/**
 	* Called when a menu item is selected.
 	*/
@@ -411,6 +409,10 @@ public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitList
 				return true;
 			case CLEAR_ID:
 				//mEditor.setText("");
+				return true;
+			case SETTINGS_ID:
+				Intent ssettings = new Intent(this,Settings.class);
+				startActivity(ssettings);
 				return true;
 		}
 		return super.onOptionsItemSelected(item);
