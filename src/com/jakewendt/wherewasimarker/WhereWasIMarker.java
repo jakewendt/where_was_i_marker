@@ -144,7 +144,7 @@ public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitList
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		// public void requestLocationUpdates (String provider, long minTime, float minDistance, PendingIntent intent)
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000,
-			1, new LocationUpdateHandler());
+			10, new LocationUpdateHandler());
 
 		update_settings_view(this);
 
@@ -289,7 +289,7 @@ public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitList
 			cogField.setText("---");
 		}
 		bearing_location = last_location;	
-		tts.speak("Set location",TextToSpeech.QUEUE_FLUSH, null);
+//		tts.speak("Set location",TextToSpeech.QUEUE_FLUSH, null);
 	}
 
 	public void markLocation(View view) {

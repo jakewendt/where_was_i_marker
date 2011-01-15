@@ -116,7 +116,7 @@ public class Settings extends Activity {
 	private void findViews() {
 		unitsSpinner = (Spinner)  findViewById(R.id.mph_kph_language);
 		usernameText = (EditText) findViewById(R.id.username_field);
-		emailText    = (EditText) findViewById(R.id.url_field);
+		emailText    = (EditText) findViewById(R.id.email_field);
 	}
 
 	/** Define data source for the spinners */

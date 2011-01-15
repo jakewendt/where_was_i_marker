@@ -21,6 +21,7 @@ public final class R {
         public static final int device_id=0x7f060003;
         public static final int distance=0x7f060007;
         public static final int email=0x7f060001;
+        public static final int email_field=0x7f06000c;
         public static final int latitude=0x7f060005;
         public static final int longitude=0x7f060004;
         public static final int marklocation=0x7f060009;
@@ -29,7 +30,6 @@ public final class R {
         public static final int phone_number=0x7f060002;
         public static final int showlocation=0x7f060008;
         public static final int status=0x7f06000a;
-        public static final int url_field=0x7f06000c;
         public static final int username_field=0x7f06000b;
     }
     public static final class layout {
