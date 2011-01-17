@@ -216,8 +216,8 @@ public class WhereWasIMarker extends Activity implements TextToSpeech.OnInitList
 				} else {
 					status.message("GPS not available");
 					latitudeField.setText(status.toString());
-					longitudeField.setText(status.toString());				
-					cogField.setText(status.toString());				
+					longitudeField.setText(status.toString());
+					cogField.setText(status.toString());
 				}
 				break;
 				
